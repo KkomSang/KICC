@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum SuccessStatus implements BaseCode {
     _OK(HttpStatus.OK, "2000", "Ok"),
+    _DIARY_CREATE_OK(HttpStatus.OK, "DIARY200", "Diary created"),
 
 
     ;
