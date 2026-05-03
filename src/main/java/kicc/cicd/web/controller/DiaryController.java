@@ -21,4 +21,8 @@ public class DiaryController {
     public ApiResponse<DiaryResponseDTO.DiaryPreviewListDTO> getDiaryList(@RequestParam(value = "page", defaultValue = "1")Integer page) {
         return ApiResponse.of(SuccessStatus._DIARY_LIST_OK, diaryService.getDiaryList(page));
     }
+    @GetMapping("/{diaryId}")
+    public ApiResponse<DiaryResponseDTO.DiaryDetailDTO> getDiary(@PathVariable Long diaryId) {
+        return ApiResponse.of(SuccessStatus._DIARY_DETAIL_OK, diaryService.getDiary(diaryId));
+    }
 }
