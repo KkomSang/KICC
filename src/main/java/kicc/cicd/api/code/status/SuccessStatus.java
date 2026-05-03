@@ -11,6 +11,8 @@ public enum SuccessStatus implements BaseCode {
     _OK(HttpStatus.OK, "2000", "Ok"),
     _DIARY_CREATE_OK(HttpStatus.OK, "DIARY200", "Diary created"),
     _DIARY_LIST_OK(HttpStatus.OK, "DIARY201", "Diary List Get"),
+    _DIARY_DETAIL_OK(HttpStatus.OK, "DIARY202", "Diary Detail Get"),
+
 
 
     ;

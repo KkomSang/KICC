@@ -44,4 +44,14 @@ public class DiaryConverter {
                 .totalPage(diaryList.getTotalPages())
                 .build();
     }
+
+    public static DiaryResponseDTO.DiaryDetailDTO toDiaryDetailDTO(Diary diary, List<String> imgUrlList) {
+        return DiaryResponseDTO.DiaryDetailDTO.builder()
+                .diaryId(diary.getId())
+                .content(diary.getContent())
+                .title(diary.getTitle())
+                .createdAt(diary.getCreatedAt())
+                .imageUrlList(imgUrlList)
+                .build();
+    }
 }

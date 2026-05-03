@@ -38,4 +38,15 @@ public class DiaryResponseDTO {
         String thumbnailUrl;
         LocalDateTime createdAt;
     }
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DiaryDetailDTO {
+        Long diaryId;
+        String title;
+        String content;
+        List<String> imageUrlList;
+        LocalDateTime createdAt;
+    }
 }
