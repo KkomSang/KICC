@@ -21,3 +21,10 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 10MB
+  cloud:
+    gcp:
+      project-id: ${PROJECTID}
+      storage:
+        bucket: ${BUCKET}
+        credentials:
+          location: classpath:${KEY}.json
