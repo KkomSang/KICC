@@ -26,8 +26,9 @@ public class DiaryService {
     private final ImageRepository imageRepository;
     private final GCPStorageService gcpStorageService;
     @Value("${spring.cloud.gcp.default-thumbnail}")
-    private String thumbnail;
+    private String default_thumbnail;
     public DiaryResponseDTO.DiaryIdDTO createDiary(DiaryRequestDTO.DiaryDTO request, List<MultipartFile> images) {
+        String thumbnail = default_thumbnail;
         Diary diary = DiaryConverter.toDiary(request);
         diaryRepository.save(diary);
         if(images!=null && !images.isEmpty()) {
