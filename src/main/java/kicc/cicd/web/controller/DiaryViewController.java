@@ -12,18 +12,18 @@ public class DiaryViewController {
     /*V1*/
     @GetMapping("/diary")
     public String diaryList() {
-        return "diary-list-v1"; // src/main/resources/templates/diary-list-v1.html 을 보여줌
+        return "diary-list-v1";
     }
 
     @GetMapping("/diary/{id}")
     public String diaryDetail(@PathVariable Long id, Model model) {
-        model.addAttribute("id", id); // HTML 쪽에 일기 ID를 넘겨줌
-        return "diary-detail-v1"; // src/main/resources/templates/diary-detail-v1.html 을 보여줌
+        model.addAttribute("id", id);
+        return "diary-detail-v1";
     }
 
     @GetMapping("/diary/write")
     public String diaryWrite() {
-        return "diary-write-v1"; // src/main/resources/templates/diary-write-v1.html 을 보여줌
+        return "diary-write-v1";
     }
 
 
@@ -37,7 +37,7 @@ public class DiaryViewController {
 //
 //    @GetMapping("/diary/{id}")
 //    public String diaryDetail(@PathVariable Long id, Model model) {
-//        model.addAttribute("id", id); // HTML 쪽에 일기 ID를 넘겨줌
+//        model.addAttribute("id", id);
 //        return "diary-detail-v2";
 //    }
 //
