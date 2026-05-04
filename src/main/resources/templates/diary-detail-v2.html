@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diary Detail</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fdfbf7; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #ffd166; }
+
+        .back-btn { text-decoration: none; color: #c49c3b; font-weight: 600; margin-bottom: 25px; display: inline-block; transition: color 0.2s; display: flex; align-items: center; gap: 5px; }
+        .back-btn:hover { color: #a88126; }
+
+        .title { font-size: 32px; font-weight: 800; margin-bottom: 5px; color: #2b2d42; letter-spacing: -0.5px; }
+        .date { color: #8d99ae; font-size: 14px; margin-bottom: 30px; text-align: right; border-bottom: 1px solid #f0ece1; padding-bottom: 15px; font-weight: 500; }
+
+        .content { font-size: 17px; line-height: 1.9; color: #4a4e69; white-space: pre-wrap; word-break: break-all; margin-bottom: 40px; }
+
+        .image-gallery { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 15px; margin-top: 20px; }
+        .image-gallery img { width: 160px; height: 160px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: all 0.3s ease; cursor: pointer; }
+        .image-gallery img:hover { transform: scale(1.03) translateY(-3px); box-shadow: 0 8px 15px rgba(255, 209, 102, 0.4); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/diary" class="back-btn">← Back to List</a>
+    <div id="detailContainer">
+        <h1 class="title" id="title">Loading...</h1>
+        <!-- 날짜 출력 부분 -->
+        <div class="date" id="date"></div>
+        <div class="content" id="content"></div>
+        <div class="image-gallery" id="imageGallery"></div>
+    </div>
+</div>
+
+<script>
+    const pathParts = window.location.pathname.split('/');
+    const diaryId = pathParts[pathParts.length - 1];
+
+    async function fetchDetail() {
+        try {
+            const response = await fetch(`/api/diaries/${diaryId}`);
+            const data = await response.json();
+
+            if (data.isSuccess) {
+                const result = data.result;
+                document.getElementById('title').innerText = result.title;
+
+                // PM/AM을 위한 en-US 포맷팅 (원하시던 예쁜 포맷으로 세팅 완료)
+                document.getElementById('date').innerText = new Date(result.createdAt).toLocaleString('en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit', hour12: true
+                });
+
+                document.getElementById('content').innerText = result.content;
+
+                const gallery = document.getElementById('imageGallery');
+                gallery.innerHTML = '';
+
+                if (result.imageUrlList && result.imageUrlList.length > 0) {
+                    result.imageUrlList.forEach(url => {
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.alt = "Diary Image";
+                        img.onclick = () => window.open(url, '_blank');
+                        gallery.appendChild(img);
+                    });
+                }
+            } else {
+                alert('Failed to load the diary.');
+            }
+        } catch (error) {
+            console.error("Failed to fetch detail", error);
+        }
+    }
+
+    fetchDetail();
+</script>
+</body>
+</html>
