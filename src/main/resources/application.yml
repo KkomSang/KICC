@@ -23,6 +23,7 @@ spring:
       max-request-size: 10MB
   cloud:
     gcp:
+      default-thumbnail: ${THUMBNAIL}
       project-id: ${PROJECTID}
       storage:
         bucket: ${BUCKET}
