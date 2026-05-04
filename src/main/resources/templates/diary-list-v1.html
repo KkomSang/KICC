@@ -51,7 +51,7 @@
         const grid = document.getElementById('diaryGrid');
         grid.innerHTML = '';
         diaries.forEach(diary => {
-            const imgUrl = diary.thumbnailUrl ? diary.thumbnailUrl : 'https://via.placeholder.com/400x200?text=No+Image';
+            const imgUrl = diary.thumbnailUrl;
             const date = new Date(diary.createdAt).toLocaleDateString();
 
             grid.innerHTML += `
