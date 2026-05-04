@@ -13,8 +13,6 @@ public class DiaryConverter {
         return Diary.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .thumbnailUrl(null) //todo
-                .imageList(null)    //todo
                 .build();
     }
     public static DiaryResponseDTO.DiaryIdDTO toDiaryIdDTO(Diary request) {

@@ -21,4 +21,8 @@ public class Diary extends BaseEntity {
     private String thumbnailUrl;
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<Image> imageList = new ArrayList<>();
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
 }
