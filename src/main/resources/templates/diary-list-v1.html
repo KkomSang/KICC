@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Diary</title>
+    <style>
+        body { font-family: sans-serif; background-color: #ffffff; padding: 20px; color: #000; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #000; padding-bottom: 10px; }
+        .write-btn { padding: 5px 10px; border: 1px solid #000; background-color: #eee; color: #000; text-decoration: none; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .card { border: 1px solid #000; padding: 10px; cursor: pointer; }
+        .card img { width: 100%; height: 200px; object-fit: cover; border: 1px solid #ccc; }
+        .card-content { margin-top: 10px; }
+        .card-title { font-size: 16px; font-weight: bold; margin: 0 0 5px 0; }
+        .card-date { font-size: 12px; }
+        .pagination { display: flex; justify-content: center; margin-top: 30px; gap: 5px; }
+        .page-btn { padding: 5px 10px; border: 1px solid #000; background: #fff; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>My Diary</h2>
+        <a href="/diary/write" class="write-btn">Write New Diary</a>
+    </div>
+
+    <div class="grid" id="diaryGrid"></div>
+    <div class="pagination" id="pagination"></div>
+</div>
+
+<script>
+    let currentPage = 1;
+
+    async function fetchDiaries(page) {
+        try {
+            const response = await fetch(`/api/diaries?page=${page}`);
+            const data = await response.json();
+
+            if (data.isSuccess) {
+                currentPage = page;
+                renderGrid(data.result.diaryList);
+                renderPagination(data.result);
+            }
+        } catch (error) {
+            console.error("Failed to fetch diaries", error);
+        }
+    }
+
+    function renderGrid(diaries) {
+        const grid = document.getElementById('diaryGrid');
+        grid.innerHTML = '';
+        diaries.forEach(diary => {
+            const imgUrl = diary.thumbnailUrl ? diary.thumbnailUrl : 'https://via.placeholder.com/400x200?text=No+Image';
+            const date = new Date(diary.createdAt).toLocaleDateString();
+
+            grid.innerHTML += `
+                <div class="card" onclick="location.href='/diary/${diary.diaryId}'">
+                    <img src="${imgUrl}" alt="Thumbnail">
+                    <div class="card-content">
+                        <h3 class="card-title">${diary.title}</h3>
+                        <span class="card-date">${date}</span>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function renderPagination(pageData) {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        if (!pageData.isFirst) {
+            pagination.innerHTML += `<button class="page-btn" onclick="fetchDiaries(${currentPage - 1})">Prev</button>`;
+        }
+
+        for (let i = 1; i <= pageData.totalPage; i++) {
+            if (i === currentPage) {
+                pagination.innerHTML += `<button class="page-btn" style="background:#000; color:#fff;">${i}</button>`;
+            } else {
+                pagination.innerHTML += `<button class="page-btn" onclick="fetchDiaries(${i})">${i}</button>`;
+            }
+        }
+
+        if (!pageData.isLast) {
+            pagination.innerHTML += `<button class="page-btn" onclick="fetchDiaries(${currentPage + 1})">Next</button>`;
+        }
+    }
+
+    fetchDiaries(currentPage);
+</script>
+</body>
+</html>
