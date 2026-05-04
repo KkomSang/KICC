@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Diary</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fdfbf7; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h2 { color: #2b2d42; font-weight: 800; letter-spacing: -0.5px; }
+
+        .write-btn { padding: 12px 24px; background-color: #ffd166; color: #2b2d42; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 10px rgba(255, 209, 102, 0.4); transition: all 0.2s ease; }
+        .write-btn:hover { background-color: #ffc233; transform: translateY(-2px); box-shadow: 0 6px 14px rgba(255, 209, 102, 0.5); }
+
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+        .card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.04); cursor: pointer; transition: all 0.3s ease; border: 1px solid #f0ece1; }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 12px 20px rgba(255, 209, 102, 0.2); border-color: #ffe8a1; }
+        .card img { width: 100%; height: 220px; object-fit: cover; transition: transform 0.3s ease; }
+        .card:hover img { transform: scale(1.02); }
+        .card-content { padding: 20px; }
+        .card-title { font-size: 19px; font-weight: bold; margin: 0 0 8px 0; color: #2b2d42; }
+        .card-date { font-size: 13px; color: #8d99ae; font-weight: 500; }
+
+        .pagination { display: flex; justify-content: center; margin-top: 40px; gap: 8px; }
+        .page-btn { padding: 8px 14px; border: 1px solid #e2e2e2; background: white; cursor: pointer; border-radius: 8px; transition: all 0.2s; color: #5f6368; font-weight: 600; }
+        .page-btn:hover { background-color: #fff9e6; border-color: #ffd166; color: #2b2d42; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>My Diary</h2>
+        <a href="/diary/write" class="write-btn">Write New Diary</a>
+    </div>
+
+    <div class="grid" id="diaryGrid"></div>
+    <div class="pagination" id="pagination"></div>
+</div>
+
+<script>
+    let currentPage = 1;
+
+    async function fetchDiaries(page) {
+        try {
+            const response = await fetch(`/api/diaries?page=${page}`);
+            const data = await response.json();
+
+            if (data.isSuccess) {
+                currentPage = page;
+                renderGrid(data.result.diaryList);
+                renderPagination(data.result);
+            }
+        } catch (error) {
+            console.error("Failed to fetch diaries", error);
+        }
+    }
+
+    function renderGrid(diaries) {
+        const grid = document.getElementById('diaryGrid');
+        grid.innerHTML = '';
+        diaries.forEach(diary => {
+            const imgUrl = diary.thumbnailUrl;
+            const date = new Date(diary.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+            grid.innerHTML += `
+                <div class="card" onclick="location.href='/diary/${diary.diaryId}'">
+                    <img src="${imgUrl}" alt="Thumbnail">
+                    <div class="card-content">
+                        <h3 class="card-title">${diary.title}</h3>
+                        <span class="card-date">${date}</span>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function renderPagination(pageData) {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        if (!pageData.isFirst) {
+            pagination.innerHTML += `<button class="page-btn" onclick="fetchDiaries(${currentPage - 1})">Prev</button>`;
+        }
+
+        for (let i = 1; i <= pageData.totalPage; i++) {
+            if (i === currentPage) {
+                pagination.innerHTML += `<button class="page-btn" style="background:#ffd166; color:#2b2d42; border-color:#ffd166;">${i}</button>`;
+            } else {
+                pagination.innerHTML += `<button class="page-btn" onclick="fetchDiaries(${i})">${i}</button>`;
+            }
+        }
+
+        if (!pageData.isLast) {
+            pagination.innerHTML += `<button class="page-btn" onclick="fetchDiaries(${currentPage + 1})">Next</button>`;
+        }
+    }
+
+    fetchDiaries(currentPage);
+</script>
+</body>
+</html>

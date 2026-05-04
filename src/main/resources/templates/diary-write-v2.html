@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Write Diary</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fdfbf7; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #ffd166; }
+
+        h2 { text-align: center; color: #2b2d42; margin-bottom: 35px; font-weight: 800; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-weight: 700; margin-bottom: 10px; color: #4a4e69; }
+
+        input[type="text"], textarea { width: 100%; padding: 15px; border: 2px solid #f0ece1; border-radius: 10px; box-sizing: border-box; font-family: inherit; font-size: 15px; transition: all 0.2s ease; background-color: #faf9f6; }
+        input[type="text"]:focus, textarea:focus { outline: none; border-color: #ffd166; background-color: #fff; box-shadow: 0 0 0 4px rgba(255, 209, 102, 0.15); }
+        textarea { height: 220px; resize: vertical; line-height: 1.6; }
+
+        #file-list-display { margin-top: 15px; padding: 15px; background: #fff9e6; border-radius: 10px; font-size: 14px; color: #6c757d; border: 1px dashed #ffd166; }
+        .file-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 10px 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .file-item:last-child { margin-bottom: 0; }
+        .remove-btn { color: #ef233c; cursor: pointer; font-weight: bold; margin-left: 10px; transition: color 0.2s; padding: 5px 10px; background: #fff0f1; border-radius: 6px; }
+        .remove-btn:hover { background: #ffe1e3; color: #d90429; }
+
+        .submit-btn { width: 100%; padding: 16px; background-color: #ffd166; color: #2b2d42; border: none; border-radius: 10px; font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 20px; transition: all 0.2s ease; box-shadow: 0 4px 10px rgba(255, 209, 102, 0.3); }
+        .submit-btn:hover { background-color: #ffc233; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255, 209, 102, 0.4); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Write a New Diary</h2>
+    <form id="writeForm">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" required>
+        </div>
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea id="content" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="images">Attach Photos (Multiple files allowed)</label>
+            <input type="file" id="images" accept="image/*" multiple>
+            <div id="file-list-display">No photos selected.</div>
+        </div>
+        <button type="submit" class="submit-btn">Save</button>
+    </form>
+</div>
+
+<script>
+    let selectedFiles = [];
+
+    document.getElementById('images').addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        files.forEach(file => selectedFiles.push(file));
+        renderFileList();
+        e.target.value = "";
+    });
+
+    function renderFileList() {
+        const display = document.getElementById('file-list-display');
+        if (selectedFiles.length === 0) {
+            display.innerHTML = "No photos selected.";
+            return;
+        }
+        display.innerHTML = selectedFiles.map((file, index) => `
+            <div class="file-item">
+                <span>${file.name} <span style="color:#adb5bd; font-size:12px;">(${(file.size / 1024).toFixed(1)} KB)</span></span>
+                <span class="remove-btn" onclick="removeFile(${index})">Remove</span>
+            </div>
+        `).join('');
+    }
+
+    function removeFile(index) {
+        selectedFiles.splice(index, 1);
+        renderFileList();
+    }
+
+    document.getElementById('writeForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        const requestData = {
+            title: document.getElementById('title').value,
+            content: document.getElementById('content').value
+        };
+
+        formData.append('request', new Blob([JSON.stringify(requestData)], { type: "application/json" }));
+        selectedFiles.forEach(file => formData.append('images', file));
+
+        try {
+            const response = await fetch('/api/diaries', { method: 'POST', body: formData });
+            const data = await response.json();
+            if (data.isSuccess) {
+                alert('Diary successfully saved!');
+                window.location.href = '/diary';
+            } else {
+                alert('Failed to save: ' + data.message);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert('Server communication failed.');
+        }
+    });
+</script>
+</body>
+</html>
