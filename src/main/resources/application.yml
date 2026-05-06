@@ -28,4 +28,4 @@ spring:
       storage:
         bucket: ${BUCKET}
         credentials:
-          location: classpath:${KEY}.json
+          location: ${KEY_PATH}
