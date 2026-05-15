@@ -4,26 +4,26 @@
     <meta charset="UTF-8">
     <title>My Diary</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fdfbf7; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; padding: 20px; color: #e0e0e0; }
         .container { max-width: 800px; margin: 0 auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .header h2 { color: #2b2d42; font-weight: 800; letter-spacing: -0.5px; }
+        .header h2 { color: #ffffff; font-weight: 800; letter-spacing: -0.5px; }
 
-        .write-btn { padding: 12px 24px; background-color: #ffd166; color: #2b2d42; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 10px rgba(255, 209, 102, 0.4); transition: all 0.2s ease; }
-        .write-btn:hover { background-color: #ffc233; transform: translateY(-2px); box-shadow: 0 6px 14px rgba(255, 209, 102, 0.5); }
+        .write-btn { padding: 12px 24px; background-color: #ffd166; color: #121212; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 10px rgba(255, 209, 102, 0.2); transition: all 0.2s ease; }
+        .write-btn:hover { background-color: #ffc233; transform: translateY(-2px); box-shadow: 0 6px 14px rgba(255, 209, 102, 0.3); }
 
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
-        .card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.04); cursor: pointer; transition: all 0.3s ease; border: 1px solid #f0ece1; }
-        .card:hover { transform: translateY(-6px); box-shadow: 0 12px 20px rgba(255, 209, 102, 0.2); border-color: #ffe8a1; }
+        .card { background: #1e1e1e; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; transition: all 0.3s ease; border: 1px solid #333333; }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 12px 20px rgba(255, 209, 102, 0.1); border-color: #ffd166; }
         .card img { width: 100%; height: 220px; object-fit: cover; transition: transform 0.3s ease; }
         .card:hover img { transform: scale(1.02); }
         .card-content { padding: 20px; }
-        .card-title { font-size: 19px; font-weight: bold; margin: 0 0 8px 0; color: #2b2d42; }
-        .card-date { font-size: 13px; color: #8d99ae; font-weight: 500; }
+        .card-title { font-size: 19px; font-weight: bold; margin: 0 0 8px 0; color: #e0e0e0; }
+        .card-date { font-size: 13px; color: #9aa0a6; font-weight: 500; }
 
         .pagination { display: flex; justify-content: center; margin-top: 40px; gap: 8px; }
-        .page-btn { padding: 8px 14px; border: 1px solid #e2e2e2; background: white; cursor: pointer; border-radius: 8px; transition: all 0.2s; color: #5f6368; font-weight: 600; }
-        .page-btn:hover { background-color: #fff9e6; border-color: #ffd166; color: #2b2d42; }
+        .page-btn { padding: 8px 14px; border: 1px solid #444444; background: #1e1e1e; cursor: pointer; border-radius: 8px; transition: all 0.2s; color: #cccccc; font-weight: 600; }
+        .page-btn:hover { background-color: #333333; border-color: #ffd166; color: #ffd166; }
     </style>
 </head>
 <body>
@@ -84,7 +84,7 @@
 
         for (let i = 1; i <= pageData.totalPage; i++) {
             if (i === currentPage) {
-                pagination.innerHTML += `<button class="page-btn" style="background:#ffd166; color:#2b2d42; border-color:#ffd166;">${i}</button>`;
+                pagination.innerHTML += `<button class="page-btn" style="background:#ffd166; color:#121212; border-color:#ffd166;">${i}</button>`;
             } else {
                 pagination.innerHTML += `<button class="page-btn" onclick="fetchDiaries(${i})">${i}</button>`;
             }
