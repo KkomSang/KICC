@@ -5,12 +5,10 @@ COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 
-RUN chmod +x ./gradlew
-
-RUN ./gradlew dependencies --no-daemon
 COPY src src
-RUN ./gradlew build --exclude-task test --no-daemon
+RUN chmod +x ./gradlew
+RUN ./gradlew build --exclude-task test
 RUN mv ./build/libs/*-SNAPSHOT.jar ./app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod" ,"app.jar"]
