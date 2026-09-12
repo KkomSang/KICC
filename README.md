@@ -43,9 +43,3 @@ This project features a cloud-based CI/CD deployment pipeline for a Spring Boot-
 
 ### Monitoring & Alerts
 * **Log-Based Alerts**: Configured a `build-fail-alert` with a critical severity level to monitor logs for any Cloud Run revision errors.
-
-## 🐛 Troubleshooting & Lessons Learned
-
-* **Secret Manager Injection Issue**: 
-  * **Problem**: The application failed to load the JSON authentication key for GCP Storage because the full JSON content was injected directly instead of a file path.
-  * **Solution**: Separated the "key" from the "map" by mounting the secret as a volume and passing only the file path (`file:/app/secrets/storage`) as an environment variable.
